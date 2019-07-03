@@ -7,15 +7,14 @@
 #include "../src/route_planner.h"
 
 
-static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
-{   
+static std::optional<std::vector<std::byte>> ReadFile(const std::string &path) {
     std::ifstream is{path, std::ios::binary | std::ios::ate};
     if( !is )
         return std::nullopt;
-    
+
     auto size = is.tellg();
-    std::vector<std::byte> contents(size);    
-    
+  std::vector<std::byte> contents(size);
+
     is.seekg(0);
     is.read((char*)contents.data(), size);
 
@@ -80,7 +79,8 @@ TEST_F(RouteModelTest, NodeToRoad) {
     EXPECT_EQ(node_to_road[0].size(), 2);
     EXPECT_EQ(node_to_road[30].size(), 2);
     EXPECT_EQ(node_to_road[90].size(), 2);
-    EXPECT_EQ(node_to_road[0][0]->way, 500);
+EXPECT_EQ(node_to_road[0][0]
+->way, 551 /*500*/);
     EXPECT_EQ(node_to_road[30][1]->way, 613);
     EXPECT_EQ(node_to_road[90][1]->way, 475);
 }
@@ -90,8 +90,10 @@ TEST_F(RouteModelTest, FindNeighbors) {
     auto test_node = model.SNodes()[0];
     test_node.FindNeighbors();
     EXPECT_EQ(test_node.neighbors.size(), 2);
-    EXPECT_FLOAT_EQ(test_node.neighbors[1]->x, 1.3250526);
-    EXPECT_FLOAT_EQ(test_node.neighbors[1]->y, 0.41849667);
+EXPECT_FLOAT_EQ(test_node
+.neighbors[1]->x, 1.1881341 /*1.3250526*/);
+EXPECT_FLOAT_EQ(test_node
+.neighbors[1]->y, -0.029241385 /*0.41849667*/);
     test_node.neighbors.clear(); // Clear out neighbors just added.
     test_node = model.SNodes()[100];
     test_node.FindNeighbors();
@@ -127,8 +129,8 @@ class RoutePlannerTest : public ::testing::Test {
     std::vector<std::byte> osm_data = ReadOSMData(osm_data_file);
     RouteModel model{osm_data};
     RoutePlanner route_planner{model, 10, 10, 90, 90};
-    
-    // Construct start_node and end_node as in the model.
+
+  // Construct start_node and end_node as in the model.
     float start_x = 0.1;
     float start_y = 0.1;
     float end_x = 0.9;
