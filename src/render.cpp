@@ -26,10 +26,10 @@ void Render::Display( io2d::output_surface &surface )
     DrawWater(surface);    
     DrawRailways(surface);
     DrawHighways(surface);    
-    DrawBuildings(surface);  
-    // DrawPath(surface);
-    // DrawStartPosition(surface);   
-    // DrawEndPosition(surface);
+    DrawBuildings(surface);
+  DrawPath(surface);
+  DrawStartPosition(surface);
+  DrawEndPosition(surface);
 }
 
 void Render::DrawPath(io2d::output_surface &surface) const{

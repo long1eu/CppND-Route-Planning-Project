@@ -68,7 +68,10 @@ TEST_F(RouteModelTest, RouteModelNode) {
 TEST_F(RouteModelTest, NodeDistance) {
     RouteModel::Node test_node = model.SNodes()[1];
     RouteModel::Node test_node_2 = model.SNodes()[4];
-    EXPECT_FLOAT_EQ(test_node.distance(test_node_2), 0.10309877);
+EXPECT_FLOAT_EQ(test_node
+.
+Distance(test_node_2),
+0.10309877);
 }
 
 // Test the data created by CreateNodeToRoadHashmap.

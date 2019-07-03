@@ -5,43 +5,49 @@
 #include <unordered_map>
 #include "model.h"
 #include <iostream>
+#include <vector>
+
+using std::vector;
 
 class RouteModel : public Model {
 
-public:
-    class Node : public Model::Node {
-    public:
-        // Add public Node variables and methods here.
+ public:
+  class Node : public Model::Node {
+   public:
+    Node() {}
+    Node(float x, float y);
+    Node(int idx, RouteModel *search_model, Model::Node node);
+    void FindNeighbors();
 
-        Node() {}
+    double Distance(const Model::Node &otherNode) const {
+      return std::sqrt(std::pow((this->x - otherNode.x), 2.0f) + std::pow((this->y - otherNode.y), 2.0f));
+    }
 
-        Node(int idx, RouteModel *search_model, Model::Node node) : Model::Node(node),
-                                                                    parent_model(search_model),
-                                                                    index(idx) {}
+    Node *parent;
+    float h_value;
+    float g_value;
+    bool visited;
+    vector<Node *> neighbors;
 
-        Node *parent = nullptr;
-        float h_value = std::numeric_limits<float>::max();
-        float g_value = 0;
-        bool visited = false;
-        std::vector<Node *> neighbors;
+   private:
+    Node *FindNeighbor(vector<int> node_indices) const;
 
-        float Distance(const Node &node) const;
+    int index;
+    RouteModel *parent_model = nullptr;
+  };
 
+  RouteModel(const std::vector<std::byte> &xml);
 
-    private:
-        // Add private Node variables and methods here.
-        int index;
-        RouteModel *parent_model = nullptr;
-    };
+  inline std::unordered_map<int, vector<const Model::Road *>> &GetNodeToRoadMap() { return node_to_road; }
 
-    // Add public RouteModel variables and methods here.
-    explicit RouteModel(const std::vector<std::byte> &xml);
+  RouteModel::Node &FindClosestNode(float x, float y);
 
-    std::vector<Node> path; // This variable will eventually store the path that is found by the A* search.
-    std::vector<Node> &getSNodes() { return m_Nodes; }
+  std::vector<Node> path; // This variable will eventually store the path that is found by the A* search.
+  inline vector<Node> &SNodes() { return m_Nodes; }
 
-private:
-    // Add private RouteModel variables and methods here.
-    std::vector<Node> m_Nodes;
+ private:
+  void CreateNodeToRoadHashmap();
 
+  vector<Node> m_Nodes;
+  std::unordered_map<int, vector<const Model::Road *>> node_to_road;
 };
